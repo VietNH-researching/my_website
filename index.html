@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoang-Viet Nguyen</title>
+<meta name="description" content="Hoang-Viet Nguyen, PhD student in the Department of Statistics and Data Science, National University of Singapore. Monte Carlo methods, diffusion models and normalizing flows.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 26 C9 26 11 6 16 6 S23 26 30 26' fill='none' stroke='%231f77b4' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121417);--ink:light-dark(#1c1f24,#e6e8eb);--mute:light-dark(#5b626d,#a2a8b2);--rule:light-dark(#e3e6ea,#2a2e35);--link:light-dark(#1a5f99,#7fb8ec);--code:light-dark(#f5f6f8,#1a1d22);--c1:light-dark(#1f77b4,#5aa9e6);--c2:light-dark(#ff7f0e,#ffa24d);--plot:light-dark(#f7f9fc,#171b21)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Source Sans 3",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;overflow-x:clip}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:2px}
+.wrap{max-width:820px;margin:0 auto;padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+nav{border-bottom:1px solid var(--rule)}
+nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 24px}
+nav .me{font-family:"STIX Two Text",Georgia,serif;font-weight:600;font-size:18px;color:var(--ink);padding:14px 0}
+nav ul{display:flex;flex-wrap:wrap;gap:0 20px;list-style:none;margin:0;padding:0;font-size:16px}
+nav ul a{color:var(--mute);display:inline-block;padding:14px 0}
+nav ul a:hover{color:var(--ink);text-decoration:none}
+main{padding-top:clamp(28px,5vw,48px);padding-bottom:24px;min-height:calc(100svh - 160px)}
+.js .view{display:none}
+.js .view.on{display:block}
+.view+.view{margin-top:40px}
+.js .view+.view{margin-top:0}
+nav ul a[aria-current=page]{color:var(--ink);box-shadow:inset 0 -2px var(--c1)}
+.head{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:24px 36px;align-items:center}
+.photo{width:200px;aspect-ratio:1;border-radius:6px;object-fit:cover;border:1px solid var(--rule);display:block}
+h1{font-family:"STIX Two Text",Georgia,serif;font-size:clamp(34px,5vw,46px);line-height:1.1;letter-spacing:-.01em;font-weight:600;margin:0}
+.profiles{margin:10px 0 0;font-size:16px}
+.profiles a+a::before{content:"·";color:var(--mute);margin:0 10px;display:inline-block}
+.aff{margin:18px 0 0}
+.bio{margin-top:28px}
+.dd{margin:24px 0 0}
+.ddbox{max-width:440px;margin:0 auto}
+#ddc{display:block;width:100%;aspect-ratio:1;border-radius:6px;background:var(--plot);touch-action:pan-y}
+.ctrl{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:12px 0 6px}
+.play{font:inherit;font-size:15px;min-height:40px;padding:0 18px;background:var(--bg);cursor:pointer;border:1px solid var(--rule);border-radius:6px;color:var(--ink);min-width:96px}
+.play:focus-visible,#tsl:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+#tsl{width:100%;height:28px;margin:0;accent-color:var(--c1);cursor:pointer}
+#dd.rev #tsl{accent-color:var(--c2)}
+#dd{color:var(--c1)}
+#dd figcaption,#dd .tl{color:var(--mute)}
+.tl{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
+#tval{color:var(--ink);font-variant-numeric:tabular-nums}
+#tval i{font-family:"STIX Two Text",Georgia,serif}
+.dd figcaption{font-size:13px;line-height:1.5;color:var(--mute);margin:12px auto 0;max-width:560px;text-align:center}
+h2{font-family:"STIX Two Text",Georgia,serif;font-size:clamp(28px,4vw,34px);line-height:1.2;font-weight:600;margin:0 0 18px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px}
+h2::before{content:"";flex:none;width:26px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 14'%3E%3Cpath d='M1 13 C6 13 9 1 13 1 S20 13 25 13' fill='none' stroke='%231f77b4' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center/contain}
+p{margin:0 0 12px}
+ul.list{margin:0;padding-left:1.2em}
+ul.list li{margin:4px 0}
+ul.list li::marker{color:var(--c1)}
+.pubs{list-style:none;margin:0;padding:0}
+.pubs li{margin:0 0 18px;padding-left:14px;border-left:3px solid var(--c1)}
+.pubs li:nth-child(2n){border-left-color:var(--c2)}
+.pubs .t{font-weight:600}
+.pubs .v{color:var(--mute);font-style:italic}
+.pubs .l{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:15px;margin-top:2px}
+.l details[open]{flex-basis:100%}
+details summary{color:var(--link);cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"[";color:var(--mute)}
+details summary::after{content:"]";color:var(--mute)}
+.l a::before{content:"[";color:var(--mute)}
+.l a::after{content:"]";color:var(--mute)}
+pre{background:var(--code);border:1px solid var(--rule);border-radius:4px;padding:12px 14px;font-size:13px;line-height:1.5;overflow-x:auto;margin:8px 0 0}
+.mail{font-weight:600}
+footer{border-top:1px solid var(--rule);margin-top:40px;padding:18px 0 32px;font-size:14px;color:var(--mute)}
+@media(max-width:600px){nav ul{gap:0 14px;font-size:15px}.head{grid-template-columns:minmax(0,1fr)}.photo{width:160px;grid-row:1}}
+</style>
+</head>
+<body>
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="me" href="#home">Hoang-Viet Nguyen</a>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+<section class="view" data-page="home">
+  <div class="head">
+    <div>
+      <h1>Hoang-Viet Nguyen</h1>
+      <p class="profiles">
+        <a href="https://scholar.google.com/citations?user=WV3U4rMAAAAJ&amp;hl=en">Google Scholar</a><a href="https://github.com/VietNH-researching">GitHub</a><a href="https://arxiv.org/abs/2611.23072">arXiv</a>
+      </p>
+      <p class="aff">PhD student<br>
+      <a href="https://www.stat.nus.edu.sg/">Department of Statistics and Data Science</a><br>
+      <a href="https://www.nus.edu.sg/">National University of Singapore</a></p>
+    </div>
+    <img class="photo" src="photo.jpg" alt="Hoang-Viet Nguyen at the Department of Statistics and Data Science, NUS" width="200" height="200">
+  </div>
+
+  <div class="bio">
+  <p>I am a PhD student at the National University of Singapore, advised by <a href="https://alexxthiery.github.io/">Prof. Alexandre H. Thiéry</a>. I work on methods for sampling from unnormalized probability distributions, such as Boltzmann densities in molecular and statistical physics, by combining Monte Carlo methods with generative models such as diffusion models and normalizing flows. During my PhD, I have also had the privilege of working with <a href="https://hai-dang-dau.github.io/">Prof. Hai-Dang Dau</a> (Nanyang Technological University).</p>
+  <p>I did my bachelor's and master's studies at Hanoi National University of Education (HNUE). During my bachelor's, I worked with <a href="https://scholar.google.com/citations?user=F0Zx6GgAAAAJ&amp;hl=en">Prof. Hoang Long Ngo</a> and <a href="https://scholar.google.com/citations?user=orwECK4AAAAJ&amp;hl=en">Prof. Duc Trong Luong</a> on numerical approximation of stochastic differential equations. My master's thesis, on estimation for Ising-type models, was supervised by <a href="https://scholar.google.com/citations?hl=en&amp;user=wi118A8AAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Prof. Van Hao Can</a> (Vietnam Academy of Science and Technology). Alongside my master's, I worked for two years as a teaching assistant at HNUE.</p>
+  </div>
+</section>
+
+<section class="view" data-page="research">
+  <h2>Research interests</h2>
+  <ul class="list">
+    <li>Monte Carlo methods: sequential Monte Carlo, parallel tempering, importance sampling</li>
+    <li>Diffusion-based samplers and normalizing flows</li>
+    <li>Stochastic optimal control and nonequilibrium statistical mechanics</li>
+    <li>Stochastic differential equations and their numerical approximation</li>
+  </ul>
+
+  <figure class="dd" id="dd">
+    <div class="ddbox">
+      <canvas id="ddc" aria-label="Scatter plot of samples moving between a ring of eight Gaussian clusters and a standard Gaussian"></canvas>
+      <div class="ctrl">
+        <button type="button" class="play" id="play" aria-label="Pause">Pause</button>
+      </div>
+      <input type="range" id="tsl" min="0" max="1000" value="0" aria-label="Diffusion time">
+      <div class="tl"><span>data</span><span id="tval"><i>t</i> = 0.00</span><span>noise</span></div>
+    </div>
+    <figcaption>Drag the slider towards noise to gradually turn data into Gaussian noise; drag it back to start from fresh Gaussian noise and follow the reverse process to the data, guided by the score ∇log&nbsp;<i>p<sub>t</sub></i>.</figcaption>
+  </figure>
+
+</section>
+
+<section class="view" data-page="publications">
+  <h2>Publications</h2>
+  <ol class="pubs">
+    <li>
+      <span class="t">Amortizing Tempered Sampling with Corrected Self-Training.</span><br>
+      <b>Hoang-Viet Nguyen</b>, Hai-Dang Dau, Alexandre H. Thiéry.<br>
+      <span class="v">arXiv preprint arXiv:2611.23072, 2026.</span>
+      <div class="l">
+        <a href="https://arxiv.org/abs/2611.23072">arXiv</a>
+        <a href="https://arxiv.org/pdf/2611.23072">PDF</a>
+        <details>
+          <summary>BibTeX</summary>
+<pre>@article{nguyen2026amortizing,
+  title   = {Amortizing Tempered Sampling with Corrected Self-Training},
+  author  = {Nguyen, Hoang-Viet and Dau, Hai-Dang and Thi{\'e}ry, Alexandre H.},
+  journal = {arXiv preprint arXiv:2611.23072},
+  year    = {2026}
+}</pre>
+        </details>
+      </div>
+    </li>
+    <li>
+      <span class="t">A Multi-level Monte Carlo Simulation for Invariant Distribution of Markovian Switching Lévy-Driven SDEs with Super-Linearly Growth Coefficients.</span><br>
+      <b>Hoang-Viet Nguyen</b>, Trung-Thuy Kieu, Duc-Trong Luong, Hoang-Long Ngo, Ngoc Khue Tran.<br>
+      <span class="v">Methodology and Computing in Applied Probability, 27(4), 79, 2025.</span>
+      <div class="l">
+        <a href="https://doi.org/10.1007/s11009-025-10205-2">Journal</a>
+        <details>
+          <summary>BibTeX</summary>
+<pre>@article{nguyen2025multilevel,
+  title   = {A Multi-level {Monte Carlo} Simulation for Invariant Distribution of {Markovian} Switching {L{\'e}vy}-Driven {SDEs} with Super-Linearly Growth Coefficients},
+  author  = {Nguyen, Hoang-Viet and Kieu, Trung-Thuy and Luong, Duc-Trong and Ngo, Hoang-Long and Tran, Ngoc Khue},
+  journal = {Methodology and Computing in Applied Probability},
+  volume  = {27},
+  number  = {4},
+  pages   = {79},
+  year    = {2025},
+  doi     = {10.1007/s11009-025-10205-2}
+}</pre>
+        </details>
+      </div>
+    </li>
+  </ol>
+
+</section>
+
+<section class="view" data-page="education">
+  <h2>Education</h2>
+  <ul class="list">
+    <li><b>PhD in Statistics</b>, National University of Singapore, 2025 – present. Advisor: Prof. Alexandre H. Thiéry. Collaborator: Prof. Hai-Dang Dau (NTU).</li>
+    <li><b>Master's</b>, Hanoi National University of Education, 2023 – 2025. Thesis on estimation for Ising-type models, supervised by Prof. Van Hao Can (VAST).</li>
+    <li><b>Bachelor's</b>, Hanoi National University of Education, 2019 – 2023. Research on numerical approximation of stochastic differential equations with Prof. Hoang Long Ngo and Prof. Duc Trong Luong.</li>
+  </ul>
+</section>
+
+<section class="view" data-page="experience">
+  <h2>Working experience</h2>
+  <ul class="list">
+    <li><b>Teaching assistant</b>, Hanoi National University of Education, 2023 – 2025.</li>
+  </ul>
+</section>
+
+<section class="view" data-page="contact">
+  <h2>Contact</h2>
+  <p>Department of Statistics and Data Science<br>
+  National University of Singapore<br>
+  6 Science Drive 2, Singapore 117546</p>
+  <p>Email: <span class="mail">h.v.nguyen [at] u.nus.edu</span></p>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Hoang-Viet Nguyen</div>
+</footer>
+<script>
+{
+  const views = [...document.querySelectorAll('.view')];
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const show = () => {
+    const id = location.hash.slice(1);
+    const v = views.find(x => x.dataset.page === id) || views[0];
+    views.forEach(x => x.classList.toggle('on', x === v));
+    links.forEach(a => { if (a.getAttribute('href') === '#' + v.dataset.page && !a.classList.contains('me')) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    const h = v.querySelector('h2');
+    document.title = v.dataset.page === 'home' ? 'Hoang-Viet Nguyen' : (h ? h.textContent + ' · ' : '') + 'Hoang-Viet Nguyen';
+    window.scrollTo(0, 0);
+  };
+  addEventListener('hashchange', show);
+  show();
+}
+</script>
+<script>
+{
+  const cv = document.getElementById('ddc'), fig = document.getElementById('dd');
+  const sl = document.getElementById('tsl'), tval = document.getElementById('tval');
+  const bP = document.getElementById('play');
+  const ctx = cv.getContext('2d');
+  const K = 8, RAD = 2.2, S = 0.16, T = 3, N = 1100, L = 3.6, G = 150, M = 90;
+  const PAL = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#17becf'];
+  const mu = Array.from({length: K}, (_, k) => [RAD * Math.cos(2 * Math.PI * k / K), RAD * Math.sin(2 * Math.PI * k / K)]);
+  let st = 12345;
+  const rnd = () => { st = (st * 16807) % 2147483647; return st / 2147483647; };
+  const gn = () => Math.sqrt(-2 * Math.log(rnd())) * Math.cos(2 * Math.PI * rnd());
+  const lab = new Int8Array(N), x0 = new Float32Array(2 * N), ep = new Float32Array(2 * N);
+  for (let i = 0; i < N; i++) {
+    const k = Math.floor(rnd() * K); lab[i] = k;
+    x0[2*i] = mu[k][0] + S * gn(); x0[2*i+1] = mu[k][1] + S * gn();
+    ep[2*i] = gn(); ep[2*i+1] = gn();
+  }
+  const tOf = u => T * Math.pow(u, 1.6);
+  const vOf = t => { const a = Math.exp(-t); return [a, a * a * S * S + 1 - a * a]; };
+  const score = (x, y, t, o) => {
+    const [a, v] = vOf(t); let w = [], mx = -1e9;
+    for (let k = 0; k < K; k++) { const dx = x - a * mu[k][0], dy = y - a * mu[k][1]; w[k] = -(dx * dx + dy * dy) / (2 * v); if (w[k] > mx) mx = w[k]; }
+    let z = 0, sx = 0, sy = 0;
+    for (let k = 0; k < K; k++) { const e = Math.exp(w[k] - mx); z += e; sx += e * (x - a * mu[k][0]); sy += e * (y - a * mu[k][1]); }
+    o[0] = -sx / (z * v); o[1] = -sy / (z * v);
+  };
+  // reverse: probability-flow ODE from fresh noise, stored on a time grid
+  const tg = Array.from({length: M}, (_, j) => tOf(j / (M - 1)));
+  const rv = Array.from({length: M}, () => new Float32Array(2 * N));
+  const cur = rv[M - 1];
+  for (let i = 0; i < 2 * N; i++) cur[i] = gn();
+  const s1 = [0, 0], s2 = [0, 0];
+  for (let j = M - 1; j > 0; j--) {
+    const A = rv[j], B = rv[j - 1], sub = 8, dt = (tg[j] - tg[j - 1]) / sub;
+    for (let i = 0; i < N; i++) {
+      let x = A[2*i], y = A[2*i+1], t = tg[j];
+      for (let k = 0; k < sub; k++) {
+        score(x, y, t, s1);
+        const fx = x + s1[0], fy = y + s1[1], px = x + dt * fx, py = y + dt * fy;
+        score(px, py, t - dt, s2);
+        x += dt * 0.5 * (fx + px + s2[0]); y += dt * 0.5 * (fy + py + s2[1]); t -= dt;
+      }
+      B[2*i] = x; B[2*i+1] = y;
+    }
+  }
+  const labR = new Int8Array(N);
+  for (let i = 0; i < N; i++) {
+    let b = 0, bd = 1e9;
+    for (let k = 0; k < K; k++) { const d = (rv[0][2*i] - mu[k][0]) ** 2 + (rv[0][2*i+1] - mu[k][1]) ** 2; if (d < bd) { bd = d; b = k; } }
+    labR[i] = b;
+  }
+  // density heat map on a small offscreen canvas
+  const off = document.createElement('canvas'); off.width = off.height = G;
+  const octx = off.getContext('2d'), img = octx.createImageData(G, G);
+  const rgb = c => (c.match(/\d+(\.\d+)?/g) || [31, 119, 180]).slice(0, 3).map(Number);
+  let mode = 'fwd', u = 0, playing = !matchMedia('(prefers-reduced-motion: reduce)').matches, t0 = performance.now();
+  const setMode = m => {
+    mode = m;
+    fig.classList.toggle('rev', m === 'rev');
+  };
+  const draw = () => {
+    const W = cv.clientWidth; if (!W) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2), P = Math.round(W * dpr);
+    if (cv.width !== P) { cv.width = cv.height = P; }
+    const t = tOf(u), [a, v] = vOf(t), sg = Math.sqrt(1 - a * a);
+    const cs = getComputedStyle(fig), blue = rgb(cs.getPropertyValue('color'));
+    let pm = 0; const dens = new Float32Array(G * G);
+    for (let r = 0; r < G; r++) for (let c = 0; c < G; c++) {
+      const x = -L + 2 * L * (c + 0.5) / G, y = L - 2 * L * (r + 0.5) / G; let p = 0;
+      for (let k = 0; k < K; k++) { const dx = x - a * mu[k][0], dy = y - a * mu[k][1]; p += Math.exp(-(dx * dx + dy * dy) / (2 * v)); }
+      dens[r * G + c] = p; if (p > pm) pm = p;
+    }
+    for (let i = 0; i < G * G; i++) {
+      const lv = Math.floor(10 * dens[i] / pm) / 10;
+      img.data[4*i] = blue[0]; img.data[4*i+1] = blue[1]; img.data[4*i+2] = blue[2]; img.data[4*i+3] = Math.round(255 * 0.5 * Math.pow(lv, 0.8));
+    }
+    octx.putImageData(img, 0, 0);
+    ctx.clearRect(0, 0, P, P);
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, P, P);
+    const sc = P / (2 * L), r = 1.6 * dpr;
+    let A = null, B = null, f = 0;
+    if (mode === 'rev') {
+      let j = 0; while (j < M - 2 && tg[j + 1] < t) j++;
+      A = rv[j]; B = rv[j + 1]; f = Math.min(1, Math.max(0, (t - tg[j]) / (tg[j + 1] - tg[j] || 1)));
+    }
+    for (let k = 0; k < K; k++) {
+      ctx.fillStyle = PAL[k]; ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        let x, y;
+        if (mode === 'fwd') { if (lab[i] !== k) continue; x = a * x0[2*i] + sg * ep[2*i]; y = a * x0[2*i+1] + sg * ep[2*i+1]; }
+        else { if (labR[i] !== k) continue; x = A[2*i] + f * (B[2*i] - A[2*i]); y = A[2*i+1] + f * (B[2*i+1] - A[2*i+1]); }
+        const px = (x + L) * sc, py = (L - y) * sc;
+        ctx.moveTo(px + r, py); ctx.arc(px, py, r, 0, 2 * Math.PI);
+      }
+      ctx.fill();
+    }
+    sl.value = Math.round(u * 1000);
+    tval.innerHTML = '<i>t</i> = ' + t.toFixed(2);
+  };
+  // autoplay timeline: hold data, add noise, hold, denoise, hold
+  const SEG = [1000, 3000, 800, 3000, 1500], C = SEG.reduce((p, q) => p + q, 0);
+  const at = e => {
+    e %= C;
+    if (e < SEG[0]) return ['fwd', 0]; e -= SEG[0];
+    if (e < SEG[1]) return ['fwd', e / SEG[1]]; e -= SEG[1];
+    if (e < SEG[2]) return ['rev', 1]; e -= SEG[2];
+    if (e < SEG[3]) return ['rev', 1 - e / SEG[3]];
+    return ['rev', 0];
+  };
+  const tick = now => {
+    if (playing) { const [m, uu] = at(now - t0); if (m !== mode) setMode(m); u = uu; draw(); requestAnimationFrame(tick); }
+  };
+  const setPlay = on => {
+    playing = on; bP.textContent = on ? 'Pause' : 'Play'; bP.setAttribute('aria-label', on ? 'Pause' : 'Play');
+    if (on) { t0 = performance.now() - (mode === 'fwd' ? SEG[0] + SEG[1] * u : SEG[0] + SEG[1] + SEG[2] + SEG[3] * (1 - u)); requestAnimationFrame(tick); }
+  };
+  // reaching the noise end switches to denoising; reaching the data end switches back to noising
+  sl.addEventListener('input', () => {
+    setPlay(false); u = sl.value / 1000;
+    if (u >= 0.999) setMode('rev'); else if (u <= 0.001) setMode('fwd');
+    draw();
+  });
+  bP.addEventListener('click', () => setPlay(!playing));
+  const ro = new ResizeObserver(draw); ro.observe(cv);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  new MutationObserver(draw).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+  setPlay(playing); draw();
+}
+</script>
+</body>
+</html>
